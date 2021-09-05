@@ -1,58 +1,66 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import React, {useEffect, useState} from 'react';
 import './App.css';
+import {Todo} from "./models/Todo";
+import {TodoList} from "./features/TodoList";
+import {AddTodo} from "./features/AddTodo";
 
-function App() {
+
+const initTodo: Todo[] = [
+  {
+    id: 1,
+    name: 'Comprare il latte',
+    date: new Date(1631040195)
+  },
+  {
+    id: 2,
+    name: 'Andare a lavoro',
+    date: new Date(1633632195)
+  },
+  {
+    id: 3,
+    name: 'Matrimonio Giorgio',
+    date: new Date(1637520195)
+  }
+];
+
+export const App = () => {
+
+  // TODOS STATE
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  // COMPONENT USE EFFECT
+  // ON CHANGE
+  // ON DESTROY
+  // DEPS = LISTEN CHANGE
+  // IF DEPS IS [] RUN ONLY FIRST TIME (ON INIT)
+  useEffect(() => {
+    setTodos(initTodo);
+    return () => {};
+  }, []);
+
+
+  const addTodo = (e: React.MouseEvent, todo: string ) => {
+    // Prevent page reload
+    e.preventDefault();
+
+    const newTodo: Todo = {
+      id: 4,
+      name: todo,
+      date: new Date(1633632196)
+    };
+
+    setTodos([...todos, newTodo]);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+    <div className='App container-fluid'>
+      <h1 className='font-monospace p-2 mb-4'>TODO LIST</h1>
+      <div className='row d-flex justify-content-center'>
+        <div className="col-6">
+          <AddTodo addTodo={addTodo}/>
+          <TodoList todos={todos} />
+        </div>
+      </div>
     </div>
   );
 }
-
-export default App;
