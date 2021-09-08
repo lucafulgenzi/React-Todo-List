@@ -4,6 +4,7 @@
 ### Created with
 
 - React
+- Typescript
 - React Router
 - Bootsrap
 - FontAwesome
