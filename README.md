@@ -1,6 +1,5 @@
 ## REACT TODO APP
 
----
 
 ### Created with
 
