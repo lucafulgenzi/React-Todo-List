@@ -1,27 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import {Todo} from "./models/Todo";
-import {TodoList} from "./features/TodoList";
-import {AddTodo} from "./features/AddTodo";
-
-
-const initTodo: Todo[] = [
-  {
-    id: 1,
-    name: 'Comprare il latte',
-    date: new Date(1631040195)
-  },
-  {
-    id: 2,
-    name: 'Andare a lavoro',
-    date: new Date(1633632195)
-  },
-  {
-    id: 3,
-    name: 'Matrimonio Giorgio',
-    date: new Date(1637520195)
-  }
-];
+import {TodoList} from "./features/list/TodoList";
+import {AddTodo} from "./features/form/AddTodo";
+import {Navbar} from "./features/components/Navbar";
+import {BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 export const App = () => {
 
@@ -34,33 +17,63 @@ export const App = () => {
   // DEPS = LISTEN CHANGE
   // IF DEPS IS [] RUN ONLY FIRST TIME (ON INIT)
   useEffect(() => {
-    setTodos(initTodo);
     return () => {};
   }, []);
 
 
-  const addTodo = (e: React.MouseEvent, todo: string ) => {
+  const addTodo = (e: React.MouseEvent, todo: string, data: Date | null ) => {
     // Prevent page reload
     e.preventDefault();
 
-    const newTodo: Todo = {
-      id: 4,
-      name: todo,
-      date: new Date(1633632196)
-    };
+    if ( todo && data ) {
+      let id = 1;
+      if (todos?.length > 0 ){ id = todos[ todos?.length - 1].id + 1 }
 
-    setTodos([...todos, newTodo]);
+      const newTodo: Todo = {
+        id: id,
+        name: todo,
+        date: data,
+        checked: false
+      };
+
+      setTodos([...todos, newTodo]);
+    }else {
+      alert('Insert a TODO');
+    }
+  }
+
+  const removeTodo = (e: React.MouseEvent, id: number) => {
+    setTodos( todos.filter( todo => todo.id !== id))
+  }
+
+  const checkTodo = (e: React.MouseEvent, id: number) => {
+
+    setTodos( todos.map( todo => {
+      if ( todo.id === id ){ todo.checked = !todo.checked }
+      return todo;
+    }))
   }
 
   return (
-    <div className='App container-fluid'>
-      <h1 className='font-monospace p-2 mb-4'>TODO LIST</h1>
-      <div className='row d-flex justify-content-center'>
-        <div className="col-6">
-          <AddTodo addTodo={addTodo}/>
-          <TodoList todos={todos} />
+    <>
+      <Router>
+        <Navbar />
+        <div className='App container-fluid'>
+          <div className='row d-flex justify-content-center'>
+            <div className="col-6">
+              <Switch>
+                <Route exact path='/'>
+                  <TodoList todos={todos} removeTodo={removeTodo} checkTodo={checkTodo}/>
+                </Route>
+                <Route exact path='/add'>
+                  <AddTodo addTodo={addTodo}/>
+                </Route>
+              </Switch>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </Router>
+    </>
+
   );
 }

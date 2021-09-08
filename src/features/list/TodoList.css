@@ -1,0 +1,20 @@
+
+.times-icon {
+  color: red;
+}
+
+.check-icon{
+  color: green;
+}
+
+.icon:hover{
+  text-shadow: 2px 0 10px rgba(150, 150, 150, 1);
+  cursor: pointer;
+}
+
+.checked {
+  text-decoration: line-through;
+}
+
+
+
